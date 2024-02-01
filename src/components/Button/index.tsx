@@ -4,11 +4,16 @@ import clsx from 'clsx'
 type props = {
  label: string
  type: "submit" | "reset" | "button" | undefined
+ onClick?: () => void
 }
 
-const Button: React.FC<props> =({label, type}) => {
+const Button: React.FC<props> =({label, type, onClick}) => {
  return (
- <button type={type} className={clsx(styles.button)}>{label}</button>
+ <button 
+ type={type} 
+ className={clsx(styles.button)}
+ onClick={onClick}
+ >{label}</button>
  )
 }
 

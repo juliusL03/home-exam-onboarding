@@ -3,6 +3,7 @@ import styles from './styles.module.scss'
 import clsx from 'clsx'
 import InputField from '../Input'
 import Button from '../Button'
+import { useRouter } from 'next/router'
 
 type FormData = {
   firstName: string
@@ -13,15 +14,20 @@ type FormData = {
 }
 
 const CustomForm: React.FC = () => {
+ const router = useRouter()
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
+    watch
   } = useForm<FormData>()
 
   const onSubmit = (data: FormData) => {
-   // Handle form submission
-   console.log(data)
+   const {firstName,  lastName, email} = data
+   router.push({
+    pathname: '/onboard',
+    query: {firstName, lastName, email},
+  })
  };
 
  const validatePassword = (value: string) => {
@@ -35,8 +41,21 @@ const CustomForm: React.FC = () => {
     hasUppercase &&
     hasLowercase ||
     'Password must have 1 special char, 1 capital 1 and 1 small letter.'
-  );
-};
+  )
+}
+
+const validatePasswordMatch = (value: string, otherValue: string) => {
+ const minLength = value.length >= 12;
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+  const hasUppercase = /[A-Z]/.test(value);
+  const hasLowercase = /[a-z]/.test(value);
+  
+  if (!minLength && !hasSpecialChar && !hasUppercase && !hasLowercase) {
+    return 'Password must have 1 special char, 1 capital 1 and 1 small letter.'
+  }
+  
+  return value === otherValue || 'Passwords do not match';
+}
 
   const fields = [{
    label:  "First Name",
@@ -82,7 +101,7 @@ const CustomForm: React.FC = () => {
    register: register('confirmPassword', {
     required: 'Confirm Password is required',
     minLength: { value: 12, message: 'Password must be at least 12 characters long' },
-    validate: validatePassword,
+    validate: (value) => validatePasswordMatch(value, watch('password')),
   }),
    placeholder: 'Enter confirm password',
    errors: errors.confirmPassword?.message
@@ -90,7 +109,7 @@ const CustomForm: React.FC = () => {
  ]
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
+    <form onSubmit={handleSubmit(onSubmit)} className={clsx(styles.form)}>
      {fields.map(field => (
       <InputField
       key={field.label}
