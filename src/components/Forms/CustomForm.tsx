@@ -50,11 +50,7 @@ const validatePasswordMatch = (value: string, otherValue: string) => {
   const hasUppercase = /[A-Z]/.test(value);
   const hasLowercase = /[a-z]/.test(value);
   
-  if (!minLength && !hasSpecialChar && !hasUppercase && !hasLowercase) {
-    return 'Password must have 1 special char, 1 capital 1 and 1 small letter.'
-  }
-  
-  return value === otherValue || 'Passwords do not match';
+  return value === otherValue ? 'Passwords do not match' : minLength && hasSpecialChar && hasUppercase && hasLowercase || 'Password must have 1 special char, 1 capital 1 and 1 small letter.'
 }
 
   const fields = [{
