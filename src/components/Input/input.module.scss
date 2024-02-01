@@ -1,0 +1,15 @@
+.wrap {
+ @apply flex flex-col
+}
+
+.input {
+ @apply w-[400px] px-[6px] py-[7px] border border-solid border-[#ccc] rounded-md
+}
+
+.label {
+ @apply flex font-bold mb-[5px] text-white shadow-sm font-serif text-[13px]
+}
+
+.error {
+ @apply text-red-600 font-[12px] text-left m-1 shadow
+}
